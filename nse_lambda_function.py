@@ -10,7 +10,7 @@ NSE_DATE_FORMAT = '%d-%b-%Y %H:%M:%S'
 DATE_TIME_STD_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
 
 exceptions = []
-
+escapes = '\b\n\r\t\\'
 def fetch_data_from_api(startDate, endDate):
     url = "https://www.nseindia.com/api/corporate-announcements?index=equities&from_date="+startDate+"&to_date="+endDate+""
     session = requests.session()
@@ -61,7 +61,7 @@ def fetchUpdates():
     # print(result)
     # return result
 
-    with open('data/nse_nov_2022_actions.csv', 'a') as file:
+    with open('data/nse_dec_1_to_21_2022_actions.csv', 'a') as file:
         writer = csv.writer(file)
         # writer.writerow(["Type", "Symbol", "Company Name", "Company Isin", "Category",
         #                  "Description", "Exchange Received Time", "Exchange Disseminated Time", "Time Difference",
@@ -103,13 +103,15 @@ def fetchUpdates():
 
 
 
-        endDate = "30-11-2022"
-        startDate = "01-11-2022"
+        endDate = "21-12-2022"
+        startDate = "01-12-2022"
         actionList = fetch_data_from_api(startDate, endDate)
         for actionItem in actionList:
             broadcastTime = datetime.strptime(actionItem["an_dt"], NSE_DATE_FORMAT)
             exchangeReceivedTime = broadcastTime
             exchangeDisseminatedTime = datetime.strptime(actionItem["exchdisstime"], NSE_DATE_FORMAT)
+            for c in escapes:
+                actionItem["desc"] = actionItem["desc"].replace(c, '')
             writer.writerow([
                 "NSE_CORPORATE_ACTION",
                 actionItem["symbol"],

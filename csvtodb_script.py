@@ -6,7 +6,7 @@ import pandas as pd
 def start():
     # for reading cs file
     exceptions = []
-    with open(r'data/nse_oct_2022_actions.csv') as file_obj:
+    with open(r'data/nse_dec_1_to_21_2022_actions.csv') as file_obj:
 
         # connect to the database
         db = mysql.connector.connect(host="database-1.cluster-cw3dxs47qdds.ap-south-1.rds.amazonaws.com", user="root",
